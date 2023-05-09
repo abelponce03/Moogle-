@@ -1,0 +1,49 @@
+﻿@page "/"
+
+<PageTitle>Moogle!</PageTitle>
+
+<h1>🔍 Moogle!</h1>
+
+<input class="p-1 my-4" @bind="query" placeholder="Introduzca su búsqueda" @onkeyup = "keyPress">
+
+<button type="default" class="btn btn-primary" @onclick="RunQuery">🔍 Buscar</button>
+
+@if (!string.IsNullOrEmpty(result.Suggestion)) {
+    <div class="suggestion">
+        <p>¿Quisiste decir <strong><a href="#"@onclick= "Suggestion">@result.Suggestion</a></strong>?</p>
+    </div>
+}
+
+<ul class="results">
+@foreach (var item in result.Items()) {
+    <li>
+        <div class="item">
+            <p class="title">@item.Title</p>
+            <p>... @item.Snippet ...</p>
+        </div>
+    </li>
+}
+</ul>
+
+@code {
+    private string query = "";
+    private SearchResult result = new SearchResult();
+
+    private void RunQuery() {
+        result = Moogle.Query(query);
+    }
+    //este metodo utiliza el vinculo de la sugerencia para que la busque
+    private void Suggestion()
+    {
+        query =result.Suggestion;
+        result = Moogle.Query(query);
+    }
+    //este meteodo es para cuando escribas tu query l puedes introducir tocando enter
+    private void keyPress(KeyboardEventArgs llave)
+    {
+        if(llave.Code == "Enter")
+        {
+            RunQuery();
+        }
+    }
+}
