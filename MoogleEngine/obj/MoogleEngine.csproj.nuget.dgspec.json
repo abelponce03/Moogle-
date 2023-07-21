@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {}
+    "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {}
   },
   "projects": {
-    "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
+    "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+        "projectUniqueName": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
         "projectName": "MoogleEngine",
-        "projectPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+        "projectPath": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
         "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-        "outputPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\obj\\",
+        "outputPath": "E:\\moogle-main\\MoogleEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

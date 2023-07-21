@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,67 +7,119 @@ using System.IO;
 using System.Globalization;
 using System.Text.RegularExpressions;
 namespace MoogleEngine;
-
+//Falta hacer los operadores como tal el de negacion ya esta hecho xd ya que si escribes una palabra con un signo de
+//exclamacion obviamente no va a salir en la lista de palabras xque la exclui entonces su tfidf va a ser de cero
 public class Documentos
 {
     public string[] archivos;
     public static string[] textos;
     public static List<string> palabrasUnicas;
+    public Dictionary<string, int> ayudaParaSnipet;
     public static double[,] matriz;
+    public static double[,] prueba;
+    public static double[] magnitud;
+    public static Dictionary<string, int>[] posicionesPalabras;
+    public static int cantidadMaxPalabrasDeTextos;
+    public static string[,] matrizDePalabras;
     public Documentos()
-    {   
+    {
         string rutaDeEjecucion = Directory.GetCurrentDirectory();
         string ruta = rutaDeEjecucion + "..\\..\\Content";
         archivos = Directory.GetFiles(ruta);
         textos = Documento(archivos);
-        palabrasUnicas = Listilla();
-        matriz = MatrizNumerica();
+        palabrasUnicas = Listilla().Item1;
+        cantidadMaxPalabrasDeTextos = Listilla().Item2;
+        ayudaParaSnipet = Listilla().Item3;
+        matriz = MatrizNumerica().Item1;
+        magnitud = Magnitud();
+        //esta posicion es para encontrar mucho mas rapido la primera aparicion de la palabra 
+        //de la query con mayor TFIDF para luego buscar una vecindad de ella y ponerla de snipet
+        posicionesPalabras = MatrizNumerica().Item2;
+        matrizDePalabras = MatrizPalabras();
+        prueba = matriz;
     }
-
-
     private static string[] Documento(string[] archivos)
     {
         string[] documentos = new string[archivos.Length];
         for (int i = 0; i < archivos.Length; i++)
         {
-            documentos[i] = File.ReadAllText(archivos[i]);
+            documentos[i] = QuitarPuntuacion(File.ReadAllText(archivos[i]));
         }
-        string[] documentosArreglados = QuitarPuntuacionYTildes(documentos);
-        return documentosArreglados;
+        return documentos;
     }
-    private static string[] QuitarPuntuacionYTildes(string[] documentos)
+    private static string QuitarPuntuacion(string documentos)
     {
-        string[] documentosArreglados = new string[documentos.Length];
-        for (int i = 0; i < documentosArreglados.Length; i++)
-        {
-            documentosArreglados[i] = documentos[i].ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "");
-        }
+        string documentosArreglados = "";
+        documentosArreglados = documentos.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "");
         return documentosArreglados;
     }
     //Esto es para crear mi diccionario de palabras, aqui tomo todas las palabras de todos los documentos
-    private static List<string> Listilla()
+    public static Tuple<List<string>, int, Dictionary<string, int>> Listilla()
     {
         HashSet<string> palabras = new HashSet<string>();
+        Dictionary<string, int> ayudaParaSnipet = new Dictionary<string, int>();
+        int[] cantidadDePalabras = new int[textos.Length];
+        int max = 0;
+        for (int i = 0; i < textos.Length; i++)
+        {
+            string[] palabrasEnString = textos[i].Split(' ');
+            cantidadDePalabras[i] = palabrasEnString.Length;
+            //Aqui es donde se crea mi lista de palabras
+            for (int j = 0; j < palabrasEnString.Length; j++)
+            {
+                if (palabrasEnString[j] != "")
+                {
+                    palabras.Add(palabrasEnString[j]);
+                }
+            }
+        }
+        List<string> Lista = palabras.ToList();
+        int posicion = 0;
+        //esto es para ayudarme en la creacion del snipet
+        for (int i = 0; i < Lista.Count; i++)
+        {
+            ayudaParaSnipet[Lista[i]] = posicion;
+            posicion++;
+        }
+        for (int i = 0; i < cantidadDePalabras.Length; i++)
+        {
+            if (max < cantidadDePalabras[i])
+            {
+                max = cantidadDePalabras[i];
+            }
+        }
+        return new Tuple<List<string>, int, Dictionary<string, int>>(Lista, max, ayudaParaSnipet);
+    }
+    //matriz que sera utilizada para sacar el snipet segun la posicion que tengan las palabras
+    //que eso lo sabre gracias al diccionario ayudaParaSnipet
+    public static string[,] MatrizPalabras()
+    {
+        string[,] matrizPalabras = new string[textos.Length, cantidadMaxPalabrasDeTextos];
         for (int i = 0; i < textos.Length; i++)
         {
             string[] palabrasEnString = textos[i].Split(' ');
             for (int j = 0; j < palabrasEnString.Length; j++)
             {
-                palabras.Add(palabrasEnString[j]);
+                matrizPalabras[i, j] = palabrasEnString[j];
             }
         }
-        return palabras.ToList();
+        return matrizPalabras;
     }
-    private static double[,] MatrizNumerica()
+    private static Tuple<double[,], Dictionary<string, int>[]> MatrizNumerica()
     {
         double[,] matriz = new double[textos.Length, palabrasUnicas.Count];
         double[] idf = new double[palabrasUnicas.Count];
-
+        //este es un diccionario que va a guardar las palabras y su posicion segun su primera aparicion
+        //en cada texto
+        Dictionary<string, int>[] PosicionDePalabrasEnDoc = new Dictionary<string, int>[textos.Length];
         //ahora voy a crear un diccionario de recuento de palabras para cada documento
         Dictionary<string, int>[] frecuenciaBruta = new Dictionary<string, int>[textos.Length];
         for (int i = 0; i < textos.Length; i++)
         {   //hay que separar las palabras del doc 
             string[] palabrasDeDoc = textos[i].Split(' ');
+            //diccionario con las posiciones de cada palabra
+            int posicion = 0;
+            Dictionary<string, int> posiciones = new Dictionary<string, int>();
             //voy a crear un diccionario temporal que va a ir guardando la frecuencia bruta de las
             //palabras de los documentos
             Dictionary<string, int> diccionario = new Dictionary<string, int>();
@@ -79,13 +130,17 @@ public class Documentos
                 if (diccionario.ContainsKey(palabra))
                 {
                     diccionario[palabra]++;
+                    posicion++;
                 }
                 else
                 {
                     diccionario[palabra] = 1;
+                    posiciones[palabra] = posicion;
+                    posicion++;
                 }
             }
             frecuenciaBruta[i] = diccionario;
+            PosicionDePalabrasEnDoc[i] = posiciones;
         }
         //y ahora procedemos a calcular la matriz
         for (int i = 0; i < textos.Length; i++)
@@ -133,9 +188,25 @@ public class Documentos
                 matriz[i, j] = matriz[i, j] * idf[j];
             }
         }
-        return matriz;
+        return new Tuple<double[,], Dictionary<string, int>[]>(matriz, PosicionDePalabrasEnDoc);
     }
-    public static double[] VectorQuery(string query)
+    public static double[] Magnitud()
+    {
+        double[] magnitud = new double[matriz.GetLength(0)];
+        for (int i = 0; i < matriz.GetLength(0); i++)
+        {
+            double sumatoriaDocumento = 0;
+            for (int j = 0; j < matriz.GetLength(1); j++)
+            {
+                sumatoriaDocumento += Math.Pow(matriz[i, j], 2);
+            }
+            //ahora vamos a ver la magnitud de cada documento
+            double docMagnitud = Math.Sqrt(sumatoriaDocumento);
+            magnitud[i] = docMagnitud;
+        }
+        return magnitud;
+    }
+    public double[] SimilitudDelCoseno(string query)
     {
         double[] idf = new double[palabrasUnicas.Count];
         //calcular idf que no es mas que la cantidad de documentos entre la aparicion de la palabra en
@@ -158,55 +229,130 @@ public class Documentos
             //por eso ignoro completamente esas palabras para que tome el valor x defecto de un 
             //array numerico
             if (aparicion != 0)
-                idf[i] = Math.Log((double)textos.Length / aparicion);
-        }
-        string[] vector = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "").Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Split(' ');
-        double[] vectorNum = new double[palabrasUnicas.Count];
-        double cantDePalabras = vector.Length;
-        double contador = 0;
-        for (int i = 0; i < palabrasUnicas.Count; i++)
-        {
-            for (int j = 0; j < vector.Length; j++)
             {
-                if (palabrasUnicas[i] == vector[j])
+                idf[i] = Math.Log((double)textos.Length / aparicion);
+            }
+        }
+        //esta parte aqui voy a poner un poco de trabajo con operadores
+        //este primer array es temporal ya que va a tener operadores y todo
+        string[] Temporal = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("?", "").Replace("(", "").Replace(")", "").Split(' ');
+        //este es el tipo ya sin operadores
+        string[] vector = new string[Temporal.Length];
+        //aqui se guardan las palabras con operadores de la query para mas adelante ser utilizadas segun su funcion
+        //en la parte del calculo
+        string[] palabrasConOperadorImportancia = new string[Temporal.Length];
+        string[] palabrasConOperadorAparicion = new string[Temporal.Length];
+        for (int i = 0; i < Temporal.Length; i++)
+        {
+            string palabra = "";
+            char[] union = new char[Temporal[i].Length];
+            for (int j = 0; j < Temporal[i].Length; j++)
+            {
+                union[j] = Temporal[i][j];
+                if (j == Temporal[i].Length - 1)
                 {
-                    contador++;
+                    if (union[0] == '*')
+                    {
+                        char[] sinOperador = new char[union.Length - 1];
+                        for (int k = 0; k < union.Length - 1; k++)
+                        {
+                            sinOperador[k] = union[k + 1];
+                        }
+                        palabra = string.Join("", sinOperador);
+                        palabrasConOperadorImportancia[i] = palabra;
+                    }
+                    else if (union[0] == '^')
+                    {
+                        char[] sinOperador = new char[union.Length - 1];
+                        for (int k = 0; k < union.Length - 1; k++)
+                        {
+                            sinOperador[k] = union[k + 1];
+                        }
+                        palabra = string.Join("", sinOperador);
+                        palabrasConOperadorAparicion[i] = palabra;
+                    }
+                    else
+                    {
+                        palabra = string.Join("", union);
+                        palabrasConOperadorImportancia[i] = "";
+                        palabrasConOperadorAparicion[i] = "";
+                    }
                 }
             }
-            //aqui esta el tf del vectornumerico que es la cantidad de veces que se repiten las palabras entre la cantidad de palabras de la query
-            vectorNum[i] = (contador / cantDePalabras) * idf[i];
-            contador = 0;
+            vector[i] = palabra;
         }
-        return vectorNum;
-    }
-    public static double[] SimilitudDelCoseno(double[] vectornum)
-    {
+        double[] vectorNum = new double[palabrasUnicas.Count];
+        //aqui realice un proceso similar al de la matriz para el tf idf del vector query
+        Dictionary<string, int> diccionario = new Dictionary<string, int>();
+        foreach (string palabra in vector)
+        {
+            if (diccionario.ContainsKey(palabra))
+            {
+                diccionario[palabra]++;
+            }
+            else
+            {
+                diccionario[palabra] = 1;
+            }
+        }
+        int cantDePalabras = diccionario.Values.Sum();
+        for (int i = 0; i < palabrasUnicas.Count; i++)
+        {
+            string palabra = palabrasUnicas[i];
+            double contador = 0;
+            if (diccionario.ContainsKey(palabra))
+            {
+                contador = diccionario[palabra];
+            }
+            //esta parte es para trabajar con el operador de importancia a partir del array que tiene
+            //las palabras que poseen el operador multiplicamos  x 2 su tfidf en el vector query
+            for(int j = 0; j < Temporal.Length; j++)
+                {
+                    if(palabra == palabrasConOperadorImportancia[j])
+                    {
+                        vectorNum[i] = 2 * (contador / cantDePalabras) * idf[i];
+                        int posicion = ayudaParaSnipet[palabra];
+                        //en este for estoy aumentando el valor de tfidf en la columna correspondiente
+                        //a la palabra con operador en la matriz
+                        for(int k = 0; k < matriz.GetLength(0); k++)
+                        {
+                            //aqui esta pasando algo raro a pesar de crear una matriz copia
+                            //que no se guardan los valores q tuvo despues de la ultima busqueda
+                            //sino los de la matriz ya establecida 
+                            //continua guardando los valores
+                            //revisar para terminar con el operador
+                            prueba[k,posicion] = 2 * prueba[k,posicion];
+                        }
+                    }
+                    else
+                    {
+                        vectorNum[i] = (contador / cantDePalabras) * idf[i];
+                    }
+                }
+        }
+        //Ahora me parece que voy a tener que trabajar con la matriz tammbien para aumentarle el tfidf
+        //a las palabras con el operador importancia
+
         //vamos a proceder a calcular el producto punto que no es mas que la suma de los
         //productos de los elementos correspondientes del vectorquery con los vectores documentos 
         //y los ire guardando en el array producto punto
         double[] productoPunto = new double[matriz.GetLength(0)];
         double sumatoriaVector = 0;
-        double sumatoriaDocumento = 0;
-        double[] magnitud = new double[matriz.GetLength(0)];
-        int contador = 0;
+        int contador1 = 0;
         double vectorMagnitud = 0;
         double[] similitud = new double[matriz.GetLength(0)];
         for (int i = 0; i < matriz.GetLength(0); i++)
         {
             for (int j = 0; j < matriz.GetLength(1); j++)
             {
-                productoPunto[i] += matriz[i, j] * vectornum[j];
-                sumatoriaDocumento += Math.Pow(matriz[i, j], 2);
-                if(contador == 0)
+                productoPunto[i] += prueba[i, j] * vectorNum[j];
+                if (contador1 == 0)
                 {
-                    sumatoriaVector += Math.Pow(vectornum[j], 2);
+                    sumatoriaVector += Math.Pow(vectorNum[j], 2);
                     //magnitud del vector que sera multiplicada x las magnitudes de cada documento
                     vectorMagnitud = Math.Sqrt(sumatoriaVector);
                 }
             }
-            //ahora vamos a ver la magnitud de cada documento
-            double docMagnitud = Math.Sqrt(sumatoriaDocumento);
-            magnitud[i] = docMagnitud;
             //y aqui multiplico la magnitud del vector por la de cada documento
             magnitud[i] = magnitud[i] * vectorMagnitud;
             //ahora voy a aplicar la formula de la similitud del coseno que no es mas que la
@@ -215,9 +361,9 @@ public class Documentos
             //aqui igual hay que utilizar una constante en la division x si acaso la query o algun documento esta vacio
             //no de error ya que la division por cero no esta definida
             similitud[i] = productoPunto[i] / (magnitud[i] + 1);
-            sumatoriaDocumento = 0;
-            contador++;
+            contador1 = 1;
         }
+        prueba = matriz;
         return similitud;
     }
     //estos metoditos no eran necesarios podia user el sort y reverse pero bueno
@@ -247,7 +393,7 @@ public class Documentos
     public static string Levenshtein(string query)
     {
         //separo las palabras de la query para hacerle el analisis a cada una 
-        string[] palabrasDeLaQuery = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "").Split(' ');
+        string[] palabrasDeLaQuery = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "").Replace("*", "").Replace("^", "").Split(' ');
         //este va a ser el array de string final que voy a imprimar
         string[] sugerencia = new string[palabrasDeLaQuery.Length];
         //esta va a ser mi sugerencia final que puede tomar varias palabras
@@ -270,7 +416,7 @@ public class Documentos
             bool aparece = false;
             for (int j = 0; j < palabrasUnicas.Count; j++)
             {
-                if (palabra == palabrasUnicas[j])
+                if (palabra == palabrasUnicas[j] || palabra == "")
                 {
                     aparece = true;
                 }
@@ -338,9 +484,9 @@ public class Documentos
             //aqui lleno mi array de bool en funcion de si aparece o no en la lista
             NoMostrar[i] = aparece;
         }
-        for(int i = 0; i < NoMostrar.Length; i++)
+        for (int i = 0; i < NoMostrar.Length; i++)
         {
-            if(NoMostrar[i] == false)
+            if (NoMostrar[i] == false)
             {
                 //esto lo retorno cuando hay al menos una palabra que no aparece en mi lista
                 return final;
@@ -348,5 +494,80 @@ public class Documentos
         }
         // y esto es que aprobaste espanol
         return "";
+    }
+    public string[] Snipet(string query)
+    {
+        string[] snipet = new string[textos.Length];
+        string[] palabraMaxTFIDF = new string[snipet.Length];
+        string[] palabrasquery = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "").Replace("*", "").Replace("^", "").Split(' ');
+        for (int i = 0; i < palabraMaxTFIDF.Length; i++)
+        {
+            double mayor = 0;
+            palabraMaxTFIDF[i] = "";
+            for (int j = 0; j < palabrasquery.Length; j++)
+            {
+                if (ayudaParaSnipet.ContainsKey(palabrasquery[j]))
+                {
+                    int posicion = ayudaParaSnipet[palabrasquery[j]];
+                    double temporal = matriz[i, posicion];
+                    if (mayor < temporal)
+                    {
+                        mayor = temporal;
+                        palabraMaxTFIDF[i] = palabrasquery[j];
+                    }
+                }
+
+            }
+        }
+        for (int i = 0; i < snipet.Length; i++)
+        {
+            snipet[i] = "";
+            Dictionary<string, int> candela = posicionesPalabras[i];
+            string[] parrafito = new string[82];
+            if (candela.ContainsKey(palabraMaxTFIDF[i]) && palabraMaxTFIDF[i] != "")
+            {
+                int posicion = candela[palabraMaxTFIDF[i]];
+                if (posicion >= 40 && (posicion + 40) <= candela.Count)
+                {
+                    int z = 0;
+                    for (int j = posicion - 40; j < posicion + 40; j++)
+                    {
+                        parrafito[z] = matrizDePalabras[i, j];
+                        z++;
+                    }
+                }
+                else if (posicion < 80 && (posicion + 80) <= candela.Count)
+                {
+                    int z = 0;
+                    for (int j = posicion; j < posicion + 80; j++)
+                    {
+                        parrafito[z] = matrizDePalabras[i, j];
+                        z++;
+                    }
+                }
+                else if (posicion >= 80 && (posicion + 80) > candela.Count)
+                {
+                    int z = 0;
+                    for (int j = posicion - 78; j <= posicion; j++)
+                    {
+                        parrafito[z] = matrizDePalabras[i, j];
+                        z++;
+                    }
+                }
+                else if (posicion < 80 && (posicion + 80) > candela.Count)
+                {
+                    int z = 0;
+                    int resta = candela.Count - posicion;
+                    for (int j = posicion; j < resta; j++)
+                    {
+                        parrafito[z] = matrizDePalabras[i, j];
+                        z++;
+                    }
+                }
+                string unido = string.Join(" ", parrafito);
+                snipet[i] = unido;
+            }
+        }
+        return snipet;
     }
 }

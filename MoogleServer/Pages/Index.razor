@@ -2,7 +2,7 @@
 
 <PageTitle>Moogle!</PageTitle>
 
-<h1>🔍 Moogle!</h1>
+<h1> 🔍 Moogle!</h1>
 
 <input class="p-1 my-4" @bind="query" placeholder="Introduzca su búsqueda" @onkeyup = "keyPress">
 
@@ -13,12 +13,11 @@
         <p>¿Quisiste decir <strong><a href="#"@onclick= "Suggestion">@result.Suggestion</a></strong>?</p>
     </div>
 }
-
 <ul class="results">
 @foreach (var item in result.Items()) {
     <li>
         <div class="item">
-            <p class="title">@item.Title</p>
+            <a href="Content/@(item.Title).txt" target="_blank"><p class="title">@item.Title</p></a>
             <p>... @item.Snippet ...</p>
         </div>
     </li>

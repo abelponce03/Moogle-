@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Escuela\\moogle-main\\moogle-main\\MoogleServer\\MoogleServer.csproj": {}
+    "E:\\moogle-main\\MoogleServer\\MoogleServer.csproj": {}
   },
   "projects": {
-    "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
+    "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+        "projectUniqueName": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
         "projectName": "MoogleEngine",
-        "projectPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+        "projectPath": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
         "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-        "outputPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\obj\\",
+        "outputPath": "E:\\moogle-main\\MoogleEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -60,14 +60,14 @@
         }
       }
     },
-    "E:\\Escuela\\moogle-main\\moogle-main\\MoogleServer\\MoogleServer.csproj": {
+    "E:\\moogle-main\\MoogleServer\\MoogleServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleServer\\MoogleServer.csproj",
+        "projectUniqueName": "E:\\moogle-main\\MoogleServer\\MoogleServer.csproj",
         "projectName": "MoogleServer",
-        "projectPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleServer\\MoogleServer.csproj",
+        "projectPath": "E:\\moogle-main\\MoogleServer\\MoogleServer.csproj",
         "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-        "outputPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleServer\\obj\\",
+        "outputPath": "E:\\moogle-main\\MoogleServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -85,8 +85,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
-                "projectPath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj"
+              "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj": {
+                "projectPath": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj"
               }
             }
           }

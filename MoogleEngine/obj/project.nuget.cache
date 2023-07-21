@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "V+oiuxFz/j+DSrCRnXtNKJ5TZlrPPd5V1Vciu+eQnUASL5Ozg4sP1qVMG6cuGgTDIkqeOmEBYG0Z4weURmQoqQ==",
+  "dgSpecHash": "MWTG5pEK2dgE/37UnkFkeAvugGS3RT0y2h6X9kHOkzGm8JvqNUPR9Vd/RGpAK7zV42lEfUhchbHeE5mnQObduQ==",
   "success": true,
-  "projectFilePath": "E:\\Escuela\\moogle-main\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+  "projectFilePath": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
