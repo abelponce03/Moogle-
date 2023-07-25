@@ -21,6 +21,7 @@ public class Documentos
     public static Dictionary<string, int>[] posicionesPalabras;
     public static int cantidadMaxPalabrasDeTextos;
     public static string[,] matrizDePalabras;
+    public static Dictionary<int, string> [] Diccionario_snipet;
     public Documentos()
     {
         string rutaDeEjecucion = Directory.GetCurrentDirectory();
@@ -36,6 +37,7 @@ public class Documentos
         //de la query con mayor TFIDF para luego buscar una vecindad de ella y ponerla de snipet
         posicionesPalabras = MatrizNumerica().Item2;
         matrizDePalabras = MatrizPalabras();
+        Diccionario_snipet = Diccionario_para_snipet(); 
         prueba = matriz;
     }
     private static string[] Documento(string[] archivos)
@@ -569,5 +571,31 @@ public class Documentos
             }
         }
         return snipet;
+    }
+    public static Dictionary<int, string>[] Diccionario_para_snipet()
+    {
+        Dictionary<int, string> [] documentos = new Dictionary<int, string>[textos.Length];
+        for(int i = 0; i < textos.Length; i++)
+        {
+            Dictionary<int, string> palabras = new Dictionary<int, string>();
+            string[] palabras_separadas = textos[i].Split(' ');
+            for(int j = 0; j < palabras_separadas.Length; j++)
+            {
+                palabras[j] = palabras_separadas[j]; 
+            }
+            documentos[i] = palabras;
+        }
+        return documentos;
+    }
+    public string[] Snipet_Mejorado (string query)
+    {
+        string[] snipet = new string[textos.Length];
+        string[] palabrasquery = query.ToLower().Replace(",", "").Replace(".", "").Replace(";", "").Replace(":", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "").Replace("*", "").Replace("^", "").Split(' ');
+        string[] aparecen = new string[palabrasquery.Length];
+        for(int i = 0; i < palabrasquery.Length; i++)
+        {
+            
+        }
+        return null;  
     }
 }

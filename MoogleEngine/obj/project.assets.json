@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+      "projectUniqueName": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj",
       "projectName": "MoogleEngine",
-      "projectPath": "E:\\moogle-main\\MoogleEngine\\MoogleEngine.csproj",
+      "projectPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj",
       "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-      "outputPath": "E:\\moogle-main\\MoogleEngine\\obj\\",
+      "outputPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
