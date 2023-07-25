@@ -52,7 +52,7 @@ function show_report_pdf()
     fi
 
     echo "Mostrando el informe..."
-    "$VIEWER_CMD" "$PDF_REPORT"
+    start "$PDF_REPORT"
 }
 
 # Opción: show_slides - Visualizar las presentaciones PDF
@@ -66,7 +66,7 @@ function show_slides_pdf()
     fi
 
     echo "Mostrando las presentaciones..."
-    "$VIEWER_CMD" "$PDF_SLIDES"
+    start "$PDF_SLIDES"
 }
 
 # Opciones del script
