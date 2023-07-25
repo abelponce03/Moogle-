@@ -69,6 +69,77 @@ function show_slides_pdf()
     start "$PDF_SLIDES"
 }
 
+# Opción: clean - Eliminar archivos, excepto fotos y .tex
+function clean_files_informe()
+{
+    cd ..
+    cd Informe
+    echo "Limpiando archivos..."
+     
+    # Extensiones válidas para imágenes
+    image_extensions=("jpg" "jpeg" "png" "gif")
+
+    # Obtener lista de archivos a borrar
+    files_to_delete=()
+    for file in *; do
+        if [ -f "$file" ] && ! is_valid_extension "$file"; then
+            files_to_delete+=("$file")
+        fi
+    done
+    # Eliminar archivos
+    if [ ${#files_to_delete[@]} -gt 0 ]; then
+        echo "Archivos a borrar:"
+        for file in "${files_to_delete[@]}"; do
+            echo "$file"
+            rm "$file"
+        done
+    else
+        echo "No hay archivos para borrar."
+    fi
+
+    echo "Limpieza completada."
+}
+
+function clean_files_presentacion()
+{
+    cd ..
+    cd Presentacion
+    echo "Limpiando archivos..."
+     
+    # Extensiones válidas para imágenes
+    image_extensions=("jpg" "jpeg" "png" "gif")
+
+    # Obtener lista de archivos a borrar
+    files_to_delete=()
+    for file in *; do
+        if [ -f "$file" ] && ! is_valid_extension "$file"; then
+            files_to_delete+=("$file")
+        fi
+    done
+    # Eliminar archivos
+    if [ ${#files_to_delete[@]} -gt 0 ]; then
+        echo "Archivos a borrar:"
+        for file in "${files_to_delete[@]}"; do
+            echo "$file"
+            rm "$file"
+        done
+    else
+        echo "No hay archivos para borrar."
+    fi
+
+    echo "Limpieza completada."
+}
+
+# Función para verificar si la extensión del archivo es válida
+function is_valid_extension() {
+    local file_extension=${1##*.}
+    if [[ ${image_extensions[*]} =~ $file_extension ]] || [ "$file_extension" == "tex" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Opciones del script
 case "$1" in
     "run")
@@ -89,10 +160,8 @@ case "$1" in
         show_slides_pdf
         ;;
     "clean")
-        echo "Limpiando ficheros auxiliares..."
-        latexmk -c
-        rm -f *.snm *.nav
-        cd "$APP_PROJECT" && dotnet clean
+        clean_files_informe
+        clean_files_presentacion
         ;;
     *)
         echo "Uso: $0 {run|report|slides|show_report|show_slides|clean}"
