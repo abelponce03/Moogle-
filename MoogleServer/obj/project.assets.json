@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleServer\\MoogleServer.csproj",
+      "projectUniqueName": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleServer\\MoogleServer.csproj",
       "projectName": "MoogleServer",
-      "projectPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleServer\\MoogleServer.csproj",
+      "projectPath": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleServer\\MoogleServer.csproj",
       "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleServer\\obj\\",
+      "outputPath": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -55,8 +55,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj": {
-              "projectPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj"
+            "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj": {
+              "projectPath": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj"
             }
           }
         }

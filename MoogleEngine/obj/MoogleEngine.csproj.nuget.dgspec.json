@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj": {}
+    "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj": {}
   },
   "projects": {
-    "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj": {
+    "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj",
+        "projectUniqueName": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj",
         "projectName": "MoogleEngine",
-        "projectPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\MoogleEngine.csproj",
+        "projectPath": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\MoogleEngine.csproj",
         "packagesPath": "C:\\Users\\abelp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\abelp\\OneDrive\\Desktop\\Clon Moogle\\Moogle-\\MoogleEngine\\obj\\",
+        "outputPath": "C:\\Users\\abelp\\onedrive\\desktop\\clon_moogle\\moogle-\\MoogleEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
