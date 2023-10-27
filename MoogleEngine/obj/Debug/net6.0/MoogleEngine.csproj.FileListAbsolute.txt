@@ -25,7 +25,6 @@ C:\Users\abelp\OneDrive\Desktop\Clon Moogle\Moogle-\MoogleEngine\obj\Debug\net6.
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\bin\Debug\net6.0\MoogleEngine.deps.json
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\bin\Debug\net6.0\MoogleEngine.dll
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\bin\Debug\net6.0\MoogleEngine.pdb
-C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\obj\Debug\net6.0\MoogleEngine.csproj.AssemblyReference.cache
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\obj\Debug\net6.0\MoogleEngine.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\obj\Debug\net6.0\MoogleEngine.AssemblyInfoInputs.cache
 C:\Users\abelp\onedrive\desktop\clon_moogle\moogle-\MoogleEngine\obj\Debug\net6.0\MoogleEngine.AssemblyInfo.cs

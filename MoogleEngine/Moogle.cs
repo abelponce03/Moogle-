@@ -1,7 +1,10 @@
 ﻿namespace MoogleEngine;
 public static class Moogle
 {
-    public static Documentos doc;
+    public static Textos textos;
+    public static Matrix matrix;
+    public static Lista lista;
+    public static Magnitud magnitud;
     public static SearchResult Query(string query)
     {
         //este for aqui es por si se les ocurre empezar a poner espacios x gusto no ponga la sugerencia
@@ -15,15 +18,16 @@ public static class Moogle
                 palabrasquery.Add(queryton[i]);
             }
         }
-        double[] similitud = doc.SimilitudDelCoseno(query);
-        string[] parrafitos = doc.Snipet(query);
+        double[] similitud = Producto_Escalar.calcular(query);
+        string[] parrafitos = Snipet.texto(query);
         string[] Todostitulos = Resultado(similitud);
         double[] Todoscores = Ordenar(similitud);
-        string levenshtein = Documentos.Levenshtein(query);
+        string levenshtein = Levenshtein.sugerencia(query);
         string[] parrafitosOrdenados = Parrafillos(Todostitulos, parrafitos);
         string[] titulos = Mostrar(Todostitulos, Todoscores, parrafitosOrdenados).Item1;
         double[] scores = Mostrar(Todostitulos, Todoscores, parrafitosOrdenados).Item2;
         string[] snipet = Mostrar(Todostitulos, Todoscores, parrafitosOrdenados).Item3;
+        
         if (palabrasquery.Count == 0)
         {
             return new SearchResult();
@@ -71,7 +75,7 @@ public static class Moogle
     //Este metodo me va a dar los titulos de los txt ordenados segun su score
     public static string[] Resultado(double[] similitud)
     {
-        string[] archivos = doc.archivos;
+        string[] archivos = Textos.archivos;
         string[] candela = new string[similitud.Length];
         double[] temporal = new double[similitud.Length];
         for (int i = 0; i < similitud.Length; i++)
@@ -92,16 +96,14 @@ public static class Moogle
         }
         return candela;
     }
-    //Aqui es donde voy a crear el snipet, voy a tomar solamente las 20 palabras iniciales de cada texto
-    //si no llega a 20 palabras tomo la cantidad de palabras que tenga
     public static string[] Parrafillos(string[] Todostitulos, string[] parrafito)
     {
-        string[] parrafitosOrdenados = new string[doc.archivos.Length];
+        string[] parrafitosOrdenados = new string[Textos.archivos.Length];
         for (int i = 0; i < parrafitosOrdenados.Length; i++)
         {
             for (int j = 0; j < parrafitosOrdenados.Length; j++)
             {
-                if (Path.GetFileNameWithoutExtension(doc.archivos[j]) == Todostitulos[i])
+                if (Path.GetFileNameWithoutExtension(Textos.archivos[j]) == Todostitulos[i])
                 {
                     parrafitosOrdenados[i] = parrafito[j];
                     break;
@@ -113,7 +115,10 @@ public static class Moogle
     //esto es para crear mi matriz y lista de palabras antes de ejecutar el programa
     public static void Iniciar()
     {
-        doc = new Documentos();
+        textos = new Textos();
+        lista = new Lista();
+        matrix = new Matrix();
+        magnitud = new Magnitud();
     }
     public static double[] Ordenar(double[] x)
     {
